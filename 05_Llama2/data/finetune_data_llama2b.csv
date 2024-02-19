@@ -1,0 +1,2494 @@
+instruction,question,sql_tbl_1,sql_tbl_2,answer
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON user AS TargetTable
+            ON user_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('user_id')
+                TargetFeatureColumns('date_joined')
+                RefIDColumn('user_id')
+                RefFeatureColumns('date_joined')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'item' and 'item_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'user' and 'user_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'transaction' and 'transaction_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'payment' and 'payment_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'product' and 'product_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE product (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","
+    CREATE TABLE product_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON product AS TargetTable
+    ON product_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('price','stock_quantity')
+        RefIDColumn('product_id')
+        RefFeatureColumns('price','stock_quantity')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'item' and 'item_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON inventory AS TargetTable
+            ON inventory_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('product_id')
+                TargetFeatureColumns('quantity','price')
+                RefIDColumn('product_id')
+                RefFeatureColumns('quantity','price')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'inventory' and 'inventory_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON payment AS TargetTable
+            ON payment_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('payment_id')
+                TargetFeatureColumns('amount')
+                RefIDColumn('payment_id')
+                RefFeatureColumns('amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('customer_id','amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('customer_id','amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'product' and 'product_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE product (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","
+    CREATE TABLE product_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON product AS TargetTable
+    ON product_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('price','stock_quantity')
+        RefIDColumn('product_id')
+        RefFeatureColumns('price','stock_quantity')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'order' and 'order_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE order (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","
+    CREATE TABLE order_reference (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON orders AS TargetTable
+            ON order_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('order_id')
+                TargetFeatureColumns('customer_id','total_amount','quantity', 'item_id')
+                RefIDColumn('order_id')
+                RefFeatureColumns('customer_id','total_amount','quantity', 'item_id')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'product' and 'product_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE product (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","
+    CREATE TABLE product_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON product AS TargetTable
+    ON product_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('price','stock_quantity')
+        RefIDColumn('product_id')
+        RefFeatureColumns('price','stock_quantity')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'inventory' and 'inventory_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'transaction' and 'transaction_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'payment' and 'payment_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON payment AS TargetTable
+            ON payment_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('payment_id')
+                TargetFeatureColumns('amount')
+                RefIDColumn('payment_id')
+                RefFeatureColumns('amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'inventory' and 'inventory_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'invoice' and 'invoice_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE invoice (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE invoice_reference (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON invoice AS TargetTable
+    ON invoice_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('invoice_id')
+        TargetFeatureColumns('total_amount')
+        RefIDColumn('invoice_id')
+        RefFeatureColumns('total_amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'user' and 'user_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'payment' and 'payment_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'item' and 'item_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON item AS TargetTable
+            ON item_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('item_id')
+                TargetFeatureColumns('price','stock_quantity','weight', 'color_id', 'height', 'width')
+                RefIDColumn('item_id')
+                RefFeatureColumns('price','stock_quantity','weight', 'color_id', 'height', 'width')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'invoice' and 'invoice_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE invoice (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE invoice_reference (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON invoice AS TargetTable
+    ON invoice_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('invoice_id')
+        TargetFeatureColumns('total_amount')
+        RefIDColumn('invoice_id')
+        RefFeatureColumns('total_amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'invoice' and 'invoice_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE invoice (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE invoice_reference (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON invoice AS TargetTable
+    ON invoice_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('invoice_id')
+        TargetFeatureColumns('total_amount')
+        RefIDColumn('invoice_id')
+        RefFeatureColumns('total_amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'item' and 'item_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight', 'height', 'width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight', 'height', 'width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'transaction' and 'transaction_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'order' and 'order_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE order (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","
+    CREATE TABLE order_reference (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON ""order"" AS TargetTable
+    ON order_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('order_id')
+        TargetFeatureColumns('total_amount','quantity')
+        RefIDColumn('order_id')
+        RefFeatureColumns('total_amount','quantity')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'customer' and 'customer_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE customer (
+        customer_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        email VARCHAR(255),
+        phone_number VARCHAR(20),
+        age INT,
+        gender VARCHAR(10),
+        num_visited INT,
+        total_purchased_amount INT
+    );
+    ","
+    CREATE TABLE customer_reference (
+        customer_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        email VARCHAR(255),
+        phone_number VARCHAR(20),
+        age INT,
+        gender VARCHAR(10),
+        num_visited INT,
+        total_purchased_amount INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON customer AS TargetTable
+    ON customer_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('customer_id')
+        TargetFeatureColumns('age','num_visited','total_purchased_amount')
+        RefIDColumn('customer_id')
+        RefFeatureColumns('age','num_visited','total_purchased_amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'employee' and 'employee_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE employee (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE employee_reference (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON employee AS TargetTable
+    ON employee_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('employee_id')
+        TargetFeatureColumns('salary')
+        RefIDColumn('employee_id')
+        RefFeatureColumns('salary')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'payment' and 'payment_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'item' and 'item_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'invoice' and 'invoice_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE invoice (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE invoice_reference (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON invoice AS TargetTable
+    ON invoice_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('invoice_id')
+        TargetFeatureColumns('total_amount')
+        RefIDColumn('invoice_id')
+        RefFeatureColumns('total_amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'order' and 'order_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE order (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","
+    CREATE TABLE order_reference (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON ""order"" AS TargetTable
+    ON order_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('order_id')
+        TargetFeatureColumns('customer_id','order_date','total_amount','status','quantity', 'item_id')
+        RefIDColumn('order_id')
+        RefFeatureColumns('customer_id','order_date','total_amount','status','quantity', 'item_id')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'item' and 'item_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON item AS TargetTable
+            ON item_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('item_id')
+                TargetFeatureColumns('price','stock_quantity','category','weight','color_id','height','width')
+                RefIDColumn('item_id')
+                RefFeatureColumns('price','stock_quantity','category','weight','color_id','height','width')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'transaction' and 'transaction_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'inventory' and 'inventory_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'employee' and 'employee_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE employee (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE employee_reference (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON employee AS TargetTable
+    ON employee_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('employee_id')
+        TargetFeatureColumns('salary')
+        RefIDColumn('employee_id')
+        RefFeatureColumns('salary')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'order' and 'order_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE order (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","
+    CREATE TABLE order_reference (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON ""order"" AS TargetTable
+    ON order_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('order_id')
+        TargetFeatureColumns('customer_id','total_amount','quantity', 'item_id')
+        RefIDColumn('order_id')
+        RefFeatureColumns('customer_id','total_amount','quantity', 'item_id')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'item' and 'item_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'order' and 'order_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE order (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","
+    CREATE TABLE order_reference (
+        order_id INT PRIMARY KEY,
+        customer_id INT,
+        order_date DATE,
+        total_amount DECIMAL(10, 2),
+        status VARCHAR(50),
+        shipping_address TEXT,
+        quantity INT,
+        item_id INT
+    );
+    ","SELECT target_id, reference_id, distancetype, 
+    cast(distance as decimal(36,8)) as distance 
+FROM TD_VECTORDISTANCE (
+    ON orders AS TargetTable
+    ON order_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('order_id')
+        TargetFeatureColumns('customer_id','order_date','total_amount','status','quantity','item_id')
+        RefIDColumn('order_id')
+        RefFeatureColumns('customer_id','order_date','total_amount','status','quantity','item_id')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt
+order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'transaction' and 'transaction_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON transaction AS TargetTable
+            ON transaction_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('transaction_id')
+                TargetFeatureColumns('customer_id','amount')
+                RefIDColumn('transaction_id')
+                RefFeatureColumns('customer_id','amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'invoice' and 'invoice_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE invoice (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE invoice_reference (
+        invoice_id INT PRIMARY KEY,
+        customer_id INT,
+        total_amount DECIMAL(10, 2),
+        invoice_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON invoice AS TargetTable
+            ON invoice_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('invoice_id')
+                TargetFeatureColumns('total_amount')
+                RefIDColumn('invoice_id')
+                RefFeatureColumns('total_amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'item' and 'item_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'user' and 'user_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+        ON user AS TargetTable
+        ON user_reference AS ReferenceTable DIMENSION
+        USING
+            TargetIDColumn('user_id')
+            TargetFeatureColumns('date_joined')
+            RefIDColumn('user_id')
+            RefFeatureColumns('date_joined')
+            DistanceMeasure('euclidean','cosine','manhattan')
+            topk(2)
+    ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'payment' and 'payment_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'payment' and 'paymentd_item' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE paymentd_item (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON paymentd_item AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'employee' and 'employee_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE employee (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE employee_reference (
+        employee_id INT PRIMARY KEY,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        position VARCHAR(100),
+        department VARCHAR(100),
+        salary DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON employee AS TargetTable
+    ON employee_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('employee_id')
+        TargetFeatureColumns('salary')
+        RefIDColumn('employee_id')
+        RefFeatureColumns('salary')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON payment AS TargetTable
+            ON payment_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('payment_id')
+                TargetFeatureColumns('amount')
+                RefIDColumn('payment_id')
+                RefFeatureColumns('amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'user' and 'user_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'user' and 'user_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE user (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","
+    CREATE TABLE user_reference (
+        user_id INT PRIMARY KEY,
+        username VARCHAR(50) UNIQUE,
+        password VARCHAR(255),
+        email VARCHAR(255),
+        date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON user AS TargetTable
+    ON user_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('user_id')
+        TargetFeatureColumns('date_joined')
+        RefIDColumn('user_id')
+        RefFeatureColumns('date_joined')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'inventory' and 'inventory_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE inventory (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","
+    CREATE TABLE inventory_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        quantity INT,
+        price DECIMAL(10, 2)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON inventory AS TargetTable
+    ON inventory_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('quantity','price')
+        RefIDColumn('product_id')
+        RefFeatureColumns('quantity','price')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'product' and 'product_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE product (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","
+    CREATE TABLE product_reference (
+        product_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON product AS TargetTable
+    ON product_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('product_id')
+        TargetFeatureColumns('price','stock_quantity')
+        RefIDColumn('product_id')
+        RefFeatureColumns('price','stock_quantity')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'transaction' and 'transaction_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transaction_reference (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transaction_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Calculate the distance between the 'transaction' and 'transactiond_item' tables using TD_VectorDistance.,"
+    CREATE TABLE transaction (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","
+    CREATE TABLE transactiond_item (
+        transaction_id INT PRIMARY KEY,
+        customer_id INT,
+        amount DECIMAL(10, 2),
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON transaction AS TargetTable
+    ON transactiond_item AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('transaction_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('transaction_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Determine the distance between the 'item' and 'item_reference' tables utilizing TD_VectorDistance.,"
+    CREATE TABLE item (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","
+    CREATE TABLE item_reference (
+        item_id INT PRIMARY KEY,
+        name VARCHAR(255),
+        description TEXT,
+        price DECIMAL(10, 2),
+        stock_quantity INT,
+        category VARCHAR(100),
+        weight INT,
+        color_id INT,
+        height INT,
+        width INT
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON item AS TargetTable
+    ON item_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('item_id')
+        TargetFeatureColumns('price','stock_quantity','weight','height','width')
+        RefIDColumn('item_id')
+        RefFeatureColumns('price','stock_quantity','weight','height','width')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Find the distance between the 'payment' and 'payment_reference' tables using TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+            ON payment AS TargetTable
+            ON payment_reference AS ReferenceTable DIMENSION
+            USING
+                TargetIDColumn('payment_id')
+                TargetFeatureColumns('amount')
+                RefIDColumn('payment_id')
+                RefFeatureColumns('amount')
+                DistanceMeasure('euclidean','cosine','manhattan')
+                topk(2)
+        ) AS dt order by 3,1,2,4;"
+"
+You are an agent designed to interact with a SQL database.
+Given an input question, 
+create a syntactically correct teradatasql query to run, then look at the results of the query and return the answer.
+",Compute the distance between the 'payment' and 'payment_reference' tables employing TD_VectorDistance.,"
+    CREATE TABLE payment (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","
+    CREATE TABLE payment_reference (
+        payment_id INT PRIMARY KEY,
+        invoice_id INT,
+        amount DECIMAL(10, 2),
+        payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id)
+    );
+    ","SELECT target_id, reference_id, distancetype, cast(distance as decimal(36,8)) as distance FROM TD_VECTORDISTANCE (
+    ON payment AS TargetTable
+    ON payment_reference AS ReferenceTable DIMENSION
+    USING
+        TargetIDColumn('payment_id')
+        TargetFeatureColumns('amount')
+        RefIDColumn('payment_id')
+        RefFeatureColumns('amount')
+        DistanceMeasure('euclidean','cosine','manhattan')
+        topk(2)
+) AS dt order by 3,1,2,4;"
